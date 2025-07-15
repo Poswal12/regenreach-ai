@@ -3,52 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RegenReach.AI - Hair Content Generator</title>
+  <title>RegenReach.AI – GPT Content Generator</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f1f5f9; margin: 0; padding: 20px; }
-    .container { background: white; max-width: 800px; margin: auto; padding: 30px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-    h1 { text-align: center; color: #222; }
-    input, button {
-      width: 100%; padding: 12px; margin-top: 12px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc;
-    }
-    button { background: #0284c7; color: white; border: none; cursor: pointer; }
-    button:hover { background: #0369a1; }
-    .output { background: #e0f2fe; padding: 15px; margin-top: 15px; border-radius: 10px; white-space: pre-wrap; }
-    .thumbnail img { width: 100%; margin-top: 15px; border-radius: 10px; }
-    footer { text-align: center; margin-top: 30px; font-size: 14px; color: #888; }
+    body { font-family: Arial, sans-serif; background: #f0f4f8; padding: 20px; }
+    .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+    input, button { width: 100%; padding: 14px; margin-top: 10px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc; }
+    button { background: #007BFF; color: white; border: none; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    .output { background: #e3f2fd; padding: 16px; border-radius: 10px; margin-top: 20px; white-space: pre-wrap; font-family: monospace; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🧠 RegenReach.AI<br><small>Offline Demo – Instant Content</small></h1>
-    <input type="text" id="topicInput" placeholder="Enter a topic like 'Hair Loss in 20s'" />
-    <button onclick="generateContent()">Generate Content</button>
-
-    <div class="output" id="ideasOutput">💡 Content ideas will appear here.</div>
-    <div class="output" id="captionOutput">✍️ Instagram caption will appear here.</div>
-    <div class="output" id="videoOutput">🎬 YouTube script will appear here.</div>
-    <div class="thumbnail"><img id="thumbnail" src="https://via.placeholder.com/640x360.png?text=Hair+Clinic+AI" alt="AI-generated thumbnail" /></div>
+    <h1>🧠 RegenReach.AI – Online GPT</h1>
+    <input type="text" id="topicInput" placeholder="Enter a topic like 'Hair Loss at 25'" />
+    <button onclick="generateContent()">Generate</button>
+    <div class="output" id="outputBox">🧬 Content will appear here...</div>
   </div>
 
-  <footer>
-    © 2025 RegenReach.AI | Powered by Dr. Arvind Poswal’s Vision
-  </footer>
-
   <script>
-    function generateContent() {
-      const topic = document.getElementById('topicInput').value || "Hair Loss Protocol";
+    async function generateContent() {
+      const topic = document.getElementById('topicInput').value || "Hair Loss in 20s";
+      const API_KEY = "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";
 
-      document.getElementById('ideasOutput').textContent =
-        `• \"${topic}\" - Why it's trending now\\n• Biohack your hair back\\n• Real stories, real gains`;
+      try {
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${API_KEY}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: "gpt-4",
+            messages: [
+              {
+                role: "system",
+                content: `You're an AI marketer for a hair restoration brand. Return:
+1. A short YouTube video script
+2. Instagram caption (with emojis)
+3. Blog post summary (100 words)
+4. SEO hashtags and keywords`
+              },
+              { role: "user", content: `Topic: ${topic}` }
+            ],
+            temperature: 0.8,
+            max_tokens: 800
+          })
+        });
 
-      document.getElementById('captionOutput').textContent =
-        `🧬 Hair loss at 28?\\nIt’s not just age — it’s your genetics.\\nTry Gene Biohacking + PRP.\\n#HairRestoration #Biohacking #HairClinic`;
-
-      document.getElementById('videoOutput').textContent =
-        `🎥 Title: \"${topic} Fix in 60 Seconds\"\\nScript:\\nIf you’re losing hair young, watch this.\\nWe use peptides, growth factors, and epigenetic therapy to regrow hair from the root.\\nVisit: www.hairrestore.ai`;
-
-      document.getElementById('thumbnail').src =
-        `https://via.placeholder.com/640x360.png?text=${encodeURIComponent(topic.replace(/ /g, '+'))}`;
+        const data = await response.json();
+        if (data.choices && data.choices[0]) {
+          document.getElementById("outputBox").textContent = data.choices[0].message.content;
+        } else if (data.error) {
+          document.getElementById("outputBox").textContent = "❌ Error: " + data.error.message;
+        } else {
+          document.getElementById("outputBox").textContent = "⚠️ Unexpected error. Please try again.";
+        }
+      } catch (err) {
+        document.getElementById("outputBox").textContent = "❌ Network error. Check console.";
+        console.error("OpenAI error:", err);
+      }
     }
   </script>
 </body>
