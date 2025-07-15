@@ -3,27 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RegenReach.AI – GPT Content Generator</title>
+  <title>RegenReach.AI – GPT Longform Generator</title>
   <style>
     body { font-family: Arial, sans-serif; background: #f0f4f8; padding: 20px; }
     .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
     input, button { width: 100%; padding: 14px; margin-top: 10px; font-size: 16px; border-radius: 8px; border: 1px solid #ccc; }
     button { background: #007BFF; color: white; border: none; cursor: pointer; }
     button:hover { background: #0056b3; }
-    .output { background: #e3f2fd; padding: 16px; border-radius: 10px; margin-top: 20px; white-space: pre-wrap; font-family: monospace; }
+    .output { background: #e3f2fd; padding: 16px; border-radius: 10px; margin-top: 20px; white-space: pre-wrap; font-family: monospace; max-height: 700px; overflow-y: auto; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🧠 RegenReach.AI – Online GPT</h1>
-    <input type="text" id="topicInput" placeholder="Enter a topic like 'Hair Loss at 25'" />
-    <button onclick="generateContent()">Generate</button>
-    <div class="output" id="outputBox">🧬 Content will appear here...</div>
+    <h1>🧠 RegenReach.AI – Full Content Generator</h1>
+    <input type="text" id="topicInput" placeholder="e.g., Peptides for Hair Growth" />
+    <button onclick="generateContent()">Generate Full Content</button>
+    <div class="output" id="outputBox">📢 Long-form AI content will appear here...</div>
   </div>
 
   <script>
     async function generateContent() {
-      const topic = document.getElementById('topicInput').value || "Hair Loss in 20s";
+      const topic = document.getElementById('topicInput').value || "Hair Loss Treatment in 2025";
       const API_KEY = "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";
 
       try {
@@ -38,16 +38,22 @@
             messages: [
               {
                 role: "system",
-                content: `You're an AI marketer for a hair restoration brand. Return:
-1. A short YouTube video script
-2. Instagram caption (with emojis)
-3. Blog post summary (100 words)
-4. SEO hashtags and keywords`
+                content: `You are a top-tier content strategist for a hair transplant and biohacking clinic. Your task is to create LONG, detailed marketing content for each topic including:
+
+1. YouTube Video Script (~50 lines)
+2. Instagram Caption (~50 lines with emojis and hooks)
+3. Blog Summary (~500 words)
+4. SEO Keywords and Hashtags (~50 items)
+
+All responses should be well-formatted, creative, and tailored for digital marketing.`
               },
-              { role: "user", content: `Topic: ${topic}` }
+              {
+                role: "user",
+                content: `Create long-form content for topic: ${topic}`
+              }
             ],
-            temperature: 0.8,
-            max_tokens: 800
+            temperature: 0.85,
+            max_tokens: 2000
           })
         });
 
